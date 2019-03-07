@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{24aa17d8-d314-4bff-b8e5-97e3741fdf6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Python">
+      <UniqueIdentifier>{0ef006dc-dda9-4d9a-9a6d-b83049343a39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CommonLib">
+      <UniqueIdentifier>{e5189c34-8375-4670-863e-9d3f1f266204}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FileIOLib">
+      <UniqueIdentifier>{36de5ab9-4436-4651-8d8a-29bbe66ed9b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{3341d80f-303b-4e2e-b8f4-3997acce002f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{f649dc60-954d-4500-a22b-e5d5c48d6ff7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\molecular.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Python\pyInterpreter.cpp">
+      <Filter>Source Files\Python</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Python\pyWidget.cpp">
+      <Filter>Source Files\Python</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileIOLib\FileIOBase.cpp">
+      <Filter>Source Files\FileIOLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommonLib\Exception.cpp">
+      <Filter>Source Files\CommonLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommonLib\Logger.cpp">
+      <Filter>Source Files\CommonLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommonLib\PeriodicTable.cpp">
+      <Filter>Source Files\CommonLib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(Platform)\moc_mainWindow.cpp">
+      <Filter>Generated files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(Platform)\moc_pyWidget.cpp">
+      <Filter>Generated files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(Platform)\moc_scene3D.cpp">
+      <Filter>Generated files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(Platform)\moc_tutorialDialog.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(Platform)\qrc_icons.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(Platform)\qrc_tutorial.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="src\mainWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\scene3D.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\Python\pyWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\tutorialDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\tutorialDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\icons.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\tutorial.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

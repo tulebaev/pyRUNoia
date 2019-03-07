@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{608E122A-AC78-4B61-A9FC-9DE9E2423999}</ProjectGuid>
+    <Keyword>Qt4VSv1.0</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;UNICODE;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_OPENGL_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\src;.\$(Platform);$(PYTHON_PATH)\include;$(QTDIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(PYTHON_PATH)\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5OpenGLd.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;UNICODE;QT_DLL;QT_NO_DEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_OPENGL_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\src;.\$(Platform);$(PYTHON_PATH)\include;$(QTDIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(PYTHON_PATH)\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5OpenGL.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="src\mainWindow.h">
+      <Message>Moc%27ing %(Identity)...</Message>
+      <Outputs>.\$(Platform)\moc_%(Filename).cpp</Outputs>
+      <Command>$(QTDIR)\bin\moc.exe %(Identity) -o .\$(Platform)\moc_%(Filename).cpp</Command>
+    </CustomBuild>
+    <CustomBuild Include="src\scene3D.h">
+      <Message>Moc%27ing %(Identity)...</Message>
+      <Outputs>.\$(Platform)\moc_%(Filename).cpp</Outputs>
+      <Command>$(QTDIR)\bin\moc.exe %(Identity) -o .\$(Platform)\moc_%(Filename).cpp</Command>
+    </CustomBuild>
+    <CustomBuild Include="src\tutorialDialog.h">
+      <Message>Moc%27ing %(Identity)...</Message>
+      <Outputs>.\$(Platform)\moc_%(Filename).cpp</Outputs>
+      <Command>$(QTDIR)\bin\moc.exe %(Identity) -o .\$(Platform)\moc_%(Filename).cpp</Command>
+    </CustomBuild>
+    <CustomBuild Include="src\Python\pyWidget.h">
+      <Message>Moc%27ing %(Identity)...</Message>
+      <Outputs>.\$(Platform)\moc_%(Filename).cpp</Outputs>
+      <Command>$(QTDIR)\bin\moc.exe %(Identity) -o .\$(Platform)\moc_%(Filename).cpp</Command>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\mainWindow.cpp" />
+    <ClCompile Include="src\scene3D.cpp" />
+    <ClCompile Include="src\molecular.cpp" />
+    <ClCompile Include="src\Python\pyWidget.cpp" />
+    <ClCompile Include="src\Python\pyInterpreter.cpp" />
+    <ClCompile Include="src\CommonLib\Exception.cpp" />
+    <ClCompile Include="src\CommonLib\Logger.cpp" />
+    <ClCompile Include="src\CommonLib\PeriodicTable.cpp" />
+    <ClCompile Include="src\FileIOLib\FileIOBase.cpp" />
+    <ClCompile Include="$(Platform)\moc_mainWindow.cpp" />
+    <ClCompile Include="$(Platform)\moc_scene3D.cpp" />
+    <ClCompile Include="$(Platform)\moc_pyWidget.cpp" />
+    <ClCompile Include="$(Platform)\moc_tutorialDialog.cpp" />
+    <ClCompile Include="$(Platform)\qrc_icons.cpp" />
+    <ClCompile Include="$(Platform)\qrc_tutorial.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="src\icons.qrc">
+      <Message>Rcc%27ing %(Identity)...</Message>
+      <Outputs>.\$(Platform)\qrc_%(Filename).cpp</Outputs>
+      <Command>$(QTDIR)\bin\rcc.exe -name %(Filename) -o .\$(Platform)\qrc_%(Filename).cpp %(FullPath)</Command>
+    </CustomBuild>
+    <CustomBuild Include="src\tutorial.qrc">
+      <Message>Rcc%27ing %(Identity)...</Message>
+      <Outputs>.\$(Platform)\qrc_%(Filename).cpp</Outputs>
+      <Command>$(QTDIR)\bin\rcc.exe -name %(Filename) -o .\$(Platform)\qrc_%(Filename).cpp %(FullPath)</Command>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="src\tutorialDialog.ui">
+      <Message>Uic%27ing %(Identity)...</Message>
+      <Outputs>.\$(Platform)\ui_%(Filename).h</Outputs>
+      <Command>$(QTDIR)\bin\uic.exe -o .\$(Platform)\ui_%(Filename).h %(FullPath)</Command>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
