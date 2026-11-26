@@ -4,64 +4,34 @@
 // $Id: pyInterpreter.cpp,v 1.13.18.1 2007/03/25 21:42:50 oliver Exp $
 //
 #include "Python/pyInterpreter.h"
+#include <Python.h>
 
-QString error_message;
-PyObject* context;
-QString PyInterpreter::start_log;
 bool PyInterpreter::valid;
+PyObject* PyInterpreter::context;
+//PyInterpreter::PathStrings PyInterpreter::sys_path;
 
-PyObject* runSingleString(const QString& str, int mode)
-{
-	// clear previous errors
-	PyErr_Clear();
-	error_message = "";
-	// run the string through the interpreter
-	PyObject* result = PyRun_String(str.toLatin1().constData(), mode, context, context);
-	if (PyErr_Occurred())
-	{
-		PyObject* type;
-		PyObject* value;
-		PyObject* range;
-		char* message;
-		error_message = "ERROR: ";
-		PyErr_Fetch(&type, &value, &range);
-		if (PyArg_Parse(value, "s", &message))
-		{
-			error_message += message;
-		}
-		else
-		{
-			error_message += " (error message could not be parsed)";
-		}
-		PyErr_Print();
-		error_message += "\n";
-		return 0;
-	}
-	return result;
-}
+PyObject* pyRUNnoia_save(PyObject* self);
 
-PyInterpreter::PyInterpreter()
-{
-	valid = false;
-}
+PyDoc_STRVAR(save_method_doc, "Save current configuration to the disk.");
+static PyMethodDef pyRUNnoia_methods[] = {
+	{"save", (PyCFunction)pyRUNnoia_save, METH_NOARGS, save_method_doc},
+	{NULL, NULL, 0, NULL}
+};
 
-void PyInterpreter::finalize()
-{
-	if (Py_IsInitialized())
-	{
-		// TODO: for some reason, finalize crashes on Windows, at least if no python
-		//       module has been found. We need to fix this correctly.
-//#ifndef _MSC_VER
-		Py_Finalize();
-//#endif
-	}
-	valid = false;
-}
+PyDoc_STRVAR(module_doc, "pyRUNnoia module");
+static struct PyModuleDef pyRUNnoia_module = {
+	PyModuleDef_HEAD_INIT,
+	"pyRUNnoia",
+	module_doc,
+	-1,
+	pyRUNnoia_methods
+};
+
+PyMODINIT_FUNC init_pyRUNnoia(void) { return PyModule_Create(&pyRUNnoia_module); }
 
 void PyInterpreter::initialize()
 {
 	valid = false;
-	start_log.clear();
 
 	// finalize the interpreter if it is already running
 	if (Py_IsInitialized())
@@ -69,34 +39,27 @@ void PyInterpreter::initialize()
 		Py_Finalize();
 	}
 
+	PyImport_AppendInittab(pyRUNnoia_module.m_name, init_pyRUNnoia);
+
 	// initialize the interpreter
 	Py_Initialize();
 
-	// get a borrowed reference to the __main__ module
-	PyObject* main_module = PyImport_AddModule("__main__");
-	if (main_module == NULL)
+	// Create a valid context for our further Python calls
+	context = PyDict_New();
+	valid = (context != NULL);
+
+	auto code = std::string("from ") + std::string(pyRUNnoia_module.m_name) + std::string(" import *");
+	valid = valid && (PyRun_String(code.c_str(), Py_single_input, context, NULL) != NULL);
+}
+
+void PyInterpreter::finalize()
+{
+	if (Py_IsInitialized())
 	{
-		//Log.error() << "Python intialization failed: could not add \"__main__\" module! No Python support available." << std::endl;
-		return;
+		Py_DECREF(context);
+		Py_Finalize();
 	}
-
-	// and create a valid context for our further Python calls
-	context = PyModule_GetDict(main_module);
-	if (context == NULL)
-	{
-		//Log.error() << "Could not get valid context for Python module \"__main__\"! No Python support available." << std::endl;
-		return;
-	}
-
-	// import sys
-	runSingleString("import sys", Py_single_input);
-	start_log += error_message;
-
-	// import the site module, and the one required for the output redirection
-	runSingleString("import site, cStringIO", Py_single_input);
-	start_log += error_message;
-
-	valid = true;
+	valid = false;
 }
 
 PyObject* loadModule(const QString& name)
@@ -108,7 +71,7 @@ PyObject* loadModule(const QString& name)
 		return 0;
 	}
 
-	PyObject* mod_name = PyString_FromString(name.toLatin1().data());
+	PyObject* mod_name = PyUnicode_FromString(name.toLatin1().data());
 	PyObject* module = 0;
 	if (PyDict_Contains(module_dict, mod_name))
 	{
@@ -161,7 +124,7 @@ bool PyInterpreter::execute(const QString& module, const QString& func_name, con
 			continue;
 		}
 
-		PyObject* val = PyString_FromString(it->second.toLatin1().data());
+		PyObject* val = PyUnicode_FromString(it->second.toLatin1().data());
 		if (!val)
 		{
 			//Log.error() << "Could not create parameter" << it->first.toAscii().data() << "=" << it->second.toAscii().data() << " Skipping." << std::endl;
@@ -187,37 +150,53 @@ bool PyInterpreter::execute(const QString& module, const QString& func_name, con
 	return true;
 }
 
-QString PyInterpreter::run(const QString& code, bool& state)
+QString PyInterpreter::run(const QString& code)
 {
-	if (!valid) return "";
+	if (!valid) return QString::null;
+	QString message;
 
-	state = false;
-	if (runSingleString("CIO = cStringIO.StringIO()", Py_single_input) == 0 ||
-	    runSingleString("stdout=sys.stdout", Py_single_input) == 0 ||
-	    runSingleString("stderr=sys.stderr", Py_single_input) == 0 ||
-	    runSingleString("sys.stdout=CIO", Py_single_input) == 0 ||
-	    runSingleString("sys.stderr=CIO", Py_single_input) == 0)
-	{
-		return error_message;
+	// Run the string through the interpreter
+	PyObject* result = PyRun_String(code.toLatin1().constData(), Py_single_input, context, NULL);
+	if (result == NULL) { //PyErr_Occurred()
+		PyObject *type, *value, *traceback;
+		PyErr_Fetch(&type, &value, &traceback);
+		if (value) {
+			auto error_type = QString(value->ob_type->tp_name);
+			if (error_type == "SyntaxError") {
+				PyObject* obj = PyObject_GetAttrString(value, "text");
+				if (obj) {
+					message += QString(PyUnicode_AsUTF8(obj));
+					message += '\n';
+					Py_DECREF(obj);
+				}
+				obj = PyObject_GetAttrString(value, "offset");
+				if (obj && PyLong_Check(obj)) {
+					auto offset = PyLong_AsLong(obj);
+					message += QString(offset, ' ');
+					message += '^';
+					message += '\n';
+					Py_DECREF(obj);
+				}
+				obj = PyObject_GetAttrString(value, "msg");
+				if (obj) {
+					message += error_type;
+					message += ": ";
+					message += QString(PyUnicode_AsUTF8(obj));
+					message += '\n';
+					Py_DECREF(obj);
+				}
+			}
+			else {
+				message += error_type;
+				message += ": ";
+				message += QString(PyUnicode_AsUTF8(PyObject_Str(value)));
+				message += '\n';
+			}
+		}
+		PyErr_Clear();
 	}
 
-	state = (runSingleString(code, Py_single_input) != 0);
-	QString runError(error_message);
-
-	// retrieve output
-	char* buf = 0;
-	PyObject* result = runSingleString("str(CIO.getvalue())", Py_eval_input);
-	if (result != 0)
-	{
-		PyArg_Parse(result, "s", &buf);
-	}
-	runSingleString("sys.stdout=stdout", Py_single_input);
-	runSingleString("sys.stderr=stderr", Py_single_input);
-
-	if (state)
-		return QString(buf);
-	else
-		return runError;
+	return message;
 }
 
 bool PyInterpreter::runFile(const QString& filename)

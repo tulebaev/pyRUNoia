@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <QTDIR>C:\Qt\Qt5.8.0\5.8\msvc2015_64</QTDIR>
-    <PYTHON_PATH>C:\Python27</PYTHON_PATH>
+    <QTDIR>C:\Qt\Qt5.14\5.14.2\msvc2017_64</QTDIR>
+    <PYTHON_PATH>C:\Python</PYTHON_PATH>
     <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin;$(PATH)</LocalDebuggerEnvironment>
   </PropertyGroup>
 </Project>

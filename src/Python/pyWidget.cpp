@@ -5,31 +5,30 @@
 
 PyWidget::PyWidget(QWidget* parent, const char* title)
 	:	QDockWidget(title, parent),
-		silent(false),
-		running(false),
 		historyPosition(0)
 {
 	output = new QPlainTextEdit;
 	output->setReadOnly(true);
-	output->setFrameShape(QFrame::NoFrame);
-	output->setToolTip("Output for Python commands");
+	//output->setFrameShape(QFrame::NoFrame);
+	output->setToolTip("Output of Python commands");
 
 	lineEdit = new QLineEdit;
 	lineEdit->setFrame(false);
+	lineEdit->setMaximumHeight(24);
 	lineEdit->setToolTip("Enter a Python command and press return for execution");
 	connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(returnPressed()));
 
-	QWidget* mainArea = new QWidget(this);
-	QVBoxLayout* layout = new QVBoxLayout;
-	QHBoxLayout* commandArea = new QHBoxLayout;
 	QLabel* prompt = new QLabel(">");
 	prompt->setFrameShape(QFrame::NoFrame);
 	prompt->setStyleSheet("QLabel { background-color : white; }");
+	QHBoxLayout* commandArea = new QHBoxLayout;
 	commandArea->addWidget(prompt);
 	commandArea->addWidget(lineEdit);
+	QVBoxLayout* layout = new QVBoxLayout;
 	layout->addWidget(output);
 	layout->addLayout(commandArea);
 	layout->setMargin(0); layout->setSpacing(0);
+	QWidget* mainArea = new QWidget(this);
 	mainArea->setLayout(layout);
 	setWidget(mainArea);
 
@@ -37,8 +36,7 @@ PyWidget::PyWidget(QWidget* parent, const char* title)
 	if (!PyInterpreter::isValid())
 	{
 		setEnabled(false);
-		appendOutput("No Python support available!");
-		//statusBar()->showMessage("No Python support available!");
+		output->insertPlainText("No Python support available!");
 		return;
 	}
 
@@ -49,12 +47,6 @@ PyWidget::~PyWidget()
 {
 	history.clear();
 	PyInterpreter::finalize();
-}
-
-void PyWidget::appendOutput(const QString& text)
-{
-	if (silent) return;
-	output->insertPlainText(text);
 }
 
 void PyWidget::keyPressEvent(QKeyEvent* event)
@@ -87,18 +79,16 @@ void PyWidget::keyPressEvent(QKeyEvent* event)
 	}
 }
 
-bool PyWidget::returnPressed()
+void PyWidget::returnPressed()
 {
 	QString line = lineEdit->text().trimmed();
-	if (line.isEmpty()) return true;
-	appendOutput(">"+line+"\n");
+	if (line.isEmpty()) return;
+	output->insertPlainText(">"+line+"\n");
 	history.push_back(line);
 	historyPosition = history.size();
 	lineEdit->clear();
-	bool state;
-	QString result = PyInterpreter::run(line, state);
-	appendOutput(result);
-	return true;
+	QString result = PyInterpreter::run(line);
+	output->insertPlainText(result);
 }
 
 void PyWidget::startInterpreter()
@@ -107,7 +97,6 @@ void PyWidget::startInterpreter()
 	PyInterpreter::initialize();
 	if (!PyInterpreter::isValid())
 	{
-		appendOutput(PyInterpreter::getStartupLog());
-		return;
+		//output->insertPlainText(PyInterpreter::Log().error());
 	}
 }

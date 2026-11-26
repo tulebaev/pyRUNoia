@@ -3,6 +3,10 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
+//#include <QtCore/qdebug.h>
+
+#undef slots
+#include <Python.h>
 
 static QTextStream* logStream;
 static QFile* logFile;
@@ -54,6 +58,16 @@ void finishLogging()
 	qInstallMessageHandler(0);
 }
 
+MainWindow* mainWindow;
+
+PyObject* pyRUNnoia_save(PyObject* self)
+{
+//qDebug() << "Calling function save()";
+	mainWindow->save();
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 int main(int argc, char** argv)
 {
 	QApplication qapp(argc, argv);
@@ -61,8 +75,8 @@ int main(int argc, char** argv)
 #ifdef LOGGING
   startLogging();
 #endif
-	MainWindow mainWindow;
-	mainWindow.show();
+	mainWindow = new MainWindow;
+	mainWindow->show();
 	int res = qapp.exec();
 #ifdef LOGGING
 	finishLogging();

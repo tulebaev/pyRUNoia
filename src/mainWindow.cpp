@@ -7,9 +7,10 @@
 #include <QtCore/QSettings>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QMenuBar>
-//#include <QtWidgets/QUndoStack>
-#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTreeView>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QFileDialog>
 
 MainWindow::MainWindow()
@@ -28,7 +29,7 @@ MainWindow::MainWindow()
 	setCentralWidget(sceneView);
 
 	pyWidget = new PyWidget(this, " Python Interpreter");
-	addDockWidget(Qt::BottomDockWidgetArea, pyWidget);
+	addDockWidget(Qt::TopDockWidgetArea, pyWidget);
 
 	structuresView = new QDockWidget(" Structures");
 	structuresView->setToolTip("Structures viewer");
@@ -40,20 +41,23 @@ MainWindow::MainWindow()
 	changedLevel = 0;
 	structuresView->setWidget(structuresTree);
 	addDockWidget(Qt::LeftDockWidgetArea, structuresView);
+
+	status = new QStatusBar;
+	status->showMessage("Ready", 5000);
+	setStatusBar(status);
 }
 
 MainWindow::~MainWindow()
 {
 	if (tutorialDialog) tutorialDialog->close();
-	//writeSettings();
+	writeSettings();
 }
 
 void MainWindow::readSettings()
 {
-	/*settings = new QSettings(INIFILENAME, QSettings::IniFormat);
-	resize(settings->value("MainWindow/size", QSize(1280,1024)).toSize());
-	move(settings->value("MainWindow/pos", QPoint(150,10)).toPoint());*/
-resize(QSize(1280,1024)); move(QPoint(150,10));
+	settings = new QSettings(INIFILENAME, QSettings::IniFormat);
+	resize(settings->value("MainWindow/size", QSize(1280,960)).toSize());
+	move(settings->value("MainWindow/pos", QPoint(144,8)).toPoint());
 }
 
 void MainWindow::writeSettings()
@@ -81,7 +85,7 @@ void MainWindow::createActions()
 #else
 	quitAct->setShortcut(QKeySequence::Quit);
 #endif
-	quitAct->setStatusTip("Quit from Mutagen");
+	quitAct->setStatusTip("Quit from pyRUNoia");
 	connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
 
 	undoAct = new QAction(QIcon(":/images/undo.png"), "&Undo", this);
@@ -114,7 +118,7 @@ void MainWindow::createActions()
 	deleteAct = new QAction(QIcon(":/images/delete.png"), "&Delete", this);
 	deleteAct->setShortcut(QKeySequence::Delete);
 	deleteAct->setStatusTip("Delete the current content from project");
-	connect(deleteAct, SIGNAL(triggered()), this, SLOT(deleteSlot()));
+	connect(deleteAct, SIGNAL(triggered()), this, SLOT(delete_()));
 
 	changeWindowStateAct = new QAction(QIcon(":/images/fullscreen.png"), "&Full Screen", this);
 	changeWindowStateAct->setShortcut(QKeySequence(Qt::Key_F11));
@@ -181,7 +185,7 @@ void MainWindow::open()
 	structuresTree->setModel(0);
 	if (molecularSystem.load(fileName))
 	{
-		//qDebug() << QString("Molecular file `%1' loaded").arg(fileName);
+		status->showMessage(QString("Molecular file `%1' loaded").arg(fileName), 5000);
 		molecularSystem.calculateScope();
 		sceneView->setInitialViewPoint();
 		sceneView->repaint();
@@ -196,7 +200,7 @@ void MainWindow::save()
 	QString fileName = QFileDialog::getSaveFileName(this, "Save configuration As...", QString(), "XML files (*.xml)");
 	if (fileName.isEmpty()) return;
 	//saveAs(fileName);
-	//qDebug() << QString("Configuration file `%1' saved").arg(fileName);
+	status->showMessage(QString("Configuration file `%1' saved").arg(fileName), 5000);
 }
 
 void MainWindow::cut()
@@ -212,7 +216,7 @@ void MainWindow::paste()
 {
 }
 
-void MainWindow::deleteSlot()
+void MainWindow::delete_()
 {
 }
 

@@ -7,12 +7,11 @@
 #ifndef PYTHON_PYINTERPRETER_H
 #define PYTHON_PYINTERPRETER_H
 
-#include <Python.h>
 #include <QtCore/QList>
 #include <QtCore/QPair>
-//#include <QtCore/QVector>
 #include <QtCore/QString>
-  #include <QtCore\qdebug.h>
+
+#include <pytypedefs.h> //for PyObject
 
 /** Embedded Python interpreter.
 		There's just one global instance of the interpreter,
@@ -24,7 +23,7 @@ class PyInterpreter
 {
 private:
 	// We don't want anybody to instantiate this!
-	PyInterpreter();
+	PyInterpreter() { valid = false; context = NULL; }
 	~PyInterpreter() {}
 
 public:
@@ -57,24 +56,20 @@ public:
 	//static void setSysPath(const PathStrings& path_strings) { sys_path = path_strings; }
 
 	///	Get the current paths added to sys.path
-	//static const PathStrings& getSysPath() { return sys_path; }
+	//const PathStrings& getSysPath() { return sys_path; }
 
 	///
 	static bool isValid() { return valid; }
-
-	///
-	static QString getStartupLog() { return start_log; }
 
 	//@}
 
 	/**	@name Execution */
 	//@{
-	/**	Execute a string.
-			@param code the string to run (may contain multiple lines with correct indentation)
-			@param result bool reference which contains the result after call of function
+	/**	Execute a code.
+			@param the string of code to run (may contain multiple lines with correct indentation)
 			@return the output of the interpreter (may also contain error messages)
 	*/
-	static QString run(const QString& code, bool& result);
+	static QString run(const QString& code);
 
 	/**	Run a Python program from a file.
 			@param file_name the name of the program file
@@ -94,7 +89,7 @@ public:
 
 protected:
 	static bool valid;
-	static QString start_log;
+	static PyObject* context;
 	//static PathStrings sys_path;
 };
 

@@ -22,18 +22,19 @@ class MainWindow : public QMainWindow
 public:
 	MainWindow();
 	~MainWindow();
-private slots:
+public slots:
 	void open();
 	void save();
 	void cut();
 	void copy();
 	void paste();
-	void deleteSlot();
+	void delete_();
 	void undo();
 	void redo();
-	void changeWindowState();
 	void help();
 	void about();
+private slots:
+	void changeWindowState();
 	void structuresTreeChanged(QStandardItem*);
 private:
 	void readSettings();
@@ -65,6 +66,7 @@ private:
 private:
 	Scene3D* sceneView;
 	PyWidget* pyWidget;
+	QStatusBar* status;
 	QTreeView* structuresTree;
 	QDockWidget* structuresView;
 	TutorialDialog* tutorialDialog;

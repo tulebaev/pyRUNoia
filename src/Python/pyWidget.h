@@ -17,17 +17,13 @@ public:
 	PyWidget(QWidget* parent = 0, const char* title = 0);
 	~PyWidget();
 private slots:
-	bool returnPressed();
-	void appendOutput(const QString& text);
+	void returnPressed();
 private:
 	void startInterpreter();
 	void keyPressEvent(QKeyEvent* e);
 private:
-	bool silent;
 	QVector<QString> history;
 	int historyPosition;
-	bool running;
-	QString currentScript;
 	QLineEdit* lineEdit;
 	QPlainTextEdit* output;
 };
