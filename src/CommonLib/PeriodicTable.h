@@ -30,13 +30,13 @@ namespace Common
 		class Element
 		{
 		public:
-			Element(int nNumber, enum EPTElements eSymbol, int nPeriod, int nGroup, Common::ComChar cBlock, double dAtomicWeight, const Common::ComChar* szFullName, const Common::ComChar* szElement, double dAtomicRadius, double dIonicRadius,	double dCovalentRadius,	double dVdWRadius,	double dCrystalRadius, double dElectronegativity)
+			Element(int nNumber, EPTElements eSymbol, int nPeriod, int nGroup, Common::ComChar cBlock, double dAtomicWeight, const Common::ComChar* szFullName, const Common::ComChar* szElement, double dAtomicRadius, double dIonicRadius, double dCovalentRadius, double dVdWRadius,	double dCrystalRadius, double dElectronegativity)
 			{
-				set(nNumber, eSymbol, nPeriod, nGroup, cBlock, dAtomicWeight, szFullName, szElement, dAtomicRadius, dIonicRadius,	dCovalentRadius,	dVdWRadius,	dCrystalRadius, dElectronegativity);
+				set(nNumber, eSymbol, nPeriod, nGroup, cBlock, dAtomicWeight, szFullName, szElement, dAtomicRadius, dIonicRadius, dCovalentRadius, dVdWRadius, dCrystalRadius, dElectronegativity);
 			}
 
 		protected:
-			void set(int nNumber, enum EPTElements eSymbol, int nPeriod, int nGroup, Common::ComChar cBlock, double dAtomicWeight, const Common::ComChar* szFullName, const Common::ComChar* szElement, double dAtomicRadius, double dIonicRadius,	double dCovalentRadius,	double dVdWRadius,	double dCrystalRadius, double dElectronegativity)
+			void set(int nNumber, EPTElements eSymbol, int nPeriod, int nGroup, Common::ComChar cBlock, double dAtomicWeight, const Common::ComChar* szFullName, const Common::ComChar* szElement, double dAtomicRadius, double dIonicRadius, double dCovalentRadius, double dVdWRadius, double dCrystalRadius, double dElectronegativity)
 			{
 				m_nNumber = nNumber;
 				m_eSymbol = eSymbol;
@@ -133,7 +133,7 @@ namespace Common
 	}
 	inline std::basic_ostream<Common::ComChar>& operator << (std::basic_ostream<Common::ComChar>& os, const EPTElements& eSymbol)
 	{
-		os << (g_PT[eSymbol].m_strElement.c_str());
+		os << g_PT[eSymbol].m_strElement;
 		return os;
 	}
 
