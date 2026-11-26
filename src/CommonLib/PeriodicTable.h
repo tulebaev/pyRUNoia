@@ -30,7 +30,7 @@ namespace Common
 		class Element
 		{
 		public:
-			Element(int nNumber, EPTElements eSymbol, int nPeriod, int nGroup, Common::ComChar cBlock, double dAtomicWeight, const Common::ComChar* szFullName, const Common::ComChar* szElement, double dAtomicRadius, double dIonicRadius, double dCovalentRadius, double dVdWRadius,	double dCrystalRadius, double dElectronegativity)
+			Element(int nNumber, EPTElements eSymbol, int nPeriod, int nGroup, Common::ComChar cBlock, double dAtomicWeight, const Common::ComChar* szFullName, const Common::ComChar* szElement, double dAtomicRadius, double dIonicRadius, double dCovalentRadius, double dVdWRadius, double dCrystalRadius, double dElectronegativity)
 			{
 				set(nNumber, eSymbol, nPeriod, nGroup, cBlock, dAtomicWeight, szFullName, szElement, dAtomicRadius, dIonicRadius, dCovalentRadius, dVdWRadius, dCrystalRadius, dElectronegativity);
 			}
